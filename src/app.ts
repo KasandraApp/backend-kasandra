@@ -1,0 +1,30 @@
+import { Hono } from 'hono';
+import { loggerMiddleware } from './middleware/logger.middleware';
+import { errorMiddleware } from './middleware/error.middleware';
+import { API_PREFIX } from './config/constants';
+import healthRoute from './routes/health.route';
+import authRoute from './routes/auth';
+import cashRoute from './routes/cash.route';
+import inventoryRoute from './routes/inventory.route';
+import forecastRoute from './routes/forecast.route';
+import whatIfRoute from './routes/whatif.route';
+import alertRoute from './routes/alert.route';
+
+// Avoid eager DB initialization during tests and local bootstrapping.
+void import('./db').catch(() => undefined);
+
+const app = new Hono();
+
+app.use('*', loggerMiddleware);
+app.use('*', errorMiddleware);
+
+app.route('/health', healthRoute);
+app.route(`${API_PREFIX}/health`, healthRoute);
+app.route(`${API_PREFIX}/auth`, authRoute);
+app.route(`${API_PREFIX}/cash-transactions`, cashRoute);
+app.route(`${API_PREFIX}/inventory-items`, inventoryRoute);
+app.route(`${API_PREFIX}/forecast`, forecastRoute);
+app.route(`${API_PREFIX}/what-if`, whatIfRoute);
+app.route(`${API_PREFIX}/alerts`, alertRoute);
+
+export default app;

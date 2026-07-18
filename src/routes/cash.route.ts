@@ -1,0 +1,13 @@
+import { Hono } from 'hono';
+import { cashController } from '../controllers/cash.controller';
+import { authMiddleware } from '../middleware/auth.middleware';
+
+const cashRoute = new Hono();
+
+cashRoute.get('/', authMiddleware, (c) => cashController.list(c));
+cashRoute.post('/', authMiddleware, (c) => cashController.create(c));
+cashRoute.get('/:id', authMiddleware, (c) => cashController.getById(c));
+cashRoute.patch('/:id', authMiddleware, (c) => cashController.update(c));
+cashRoute.delete('/:id', authMiddleware, (c) => cashController.delete(c));
+
+export default cashRoute;
