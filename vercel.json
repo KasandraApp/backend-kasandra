@@ -1,7 +1,8 @@
 {
-  "buildCommand": "npx vite build",
-  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/[[route]]" }
+    {
+      "source": "/(.*)",
+      "destination": "/api/[[route]]"
+    }
   ]
 }
