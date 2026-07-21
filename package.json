@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run src/server.ts",
-    "build": "node build.mjs",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/src/server.js",
     "test": "vitest run",
     "db:migrate": "drizzle-kit push"
