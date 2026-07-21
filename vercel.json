@@ -1,4 +1,15 @@
 {
+  "version": 2,
+  "buildCommand": "node build.mjs",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "functions": {
+    "api/[[route]].js": {
+      "maxDuration": 10,
+      "memory": 512,
+      "includeFiles": "**"
+    }
+  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/[[route]]" }
   ]
