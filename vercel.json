@@ -1,15 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": "public",
-  "functions": {
-    "api/[[route]].ts": {
-      "runtime": "@vercel/node@5",
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/[[route]].ts" }
+    { "source": "/(.*)", "destination": "/api/[[route]]" }
   ]
 }
