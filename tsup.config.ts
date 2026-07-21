@@ -1,0 +1,36 @@
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: {
+    'api/[[route]]': 'api/[[route]].ts',
+  },
+  format: 'esm',
+  target: 'node20',
+  platform: 'node',
+  bundle: true,
+  dts: false,
+  sourcemap: false,
+  clean: false,
+  outDir: '.',
+  tsconfig: './tsconfig.json',
+  external: [
+    'hono',
+    '@hono/swagger-ui',
+    '@hono/zod-openapi',
+    '@hono/zod-validator',
+    'bcryptjs',
+    'date-fns',
+    'dotenv',
+    'drizzle-orm',
+    'exceljs',
+    'hono-rate-limiter',
+    'ioredis',
+    'jsonwebtoken',
+    'nodemailer',
+    'pdfkit',
+    'pino',
+    'pino-pretty',
+    'postgres',
+    'zod',
+  ],
+});

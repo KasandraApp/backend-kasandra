@@ -1,8 +1,7 @@
 {
+  "buildCommand": "npx tsup",
+  "outputDirectory": ".",
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/[[route]]"
-    }
+    { "source": "/(.*)", "destination": "/api/[[route]]" }
   ]
 }
