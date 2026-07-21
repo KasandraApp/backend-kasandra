@@ -1,15 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "node build.mjs",
+  "buildCommand": "npx esbuild api/[[route]].ts --bundle --platform=node --target=node20 --format=esm --outfile=api/[[route]].js --external:hono --external:@hono/swagger-ui --external:@hono/zod-openapi --external:bcryptjs --external:jsonwebtoken --external:zod --external:drizzle-orm --external:postgres --external:ioredis --external:pino --external:nodemailer --external:exceljs --external:pdfkit --external:dotenv",
   "outputDirectory": ".",
-  "installCommand": "npm install",
-  "functions": {
-    "api/[[route]].js": {
-      "maxDuration": 10,
-      "memory": 512,
-      "includeFiles": "**"
-    }
-  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/[[route]]" }
   ]
