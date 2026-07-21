@@ -5,7 +5,10 @@ export const openApiSpec = {
     version: '1.0.0',
     description: 'OpenAPI contract for the Kasandra backend so frontend can integrate against stable request and response shapes.',
   },
-  servers: [{ url: 'http://localhost:3000', description: 'Local development server' }],
+  servers: [
+    { url: 'http://localhost:3000', description: 'Local development server' },
+    { url: 'https://kasandra-backend.onrender.com', description: 'Production server (Render)' },
+  ],
   tags: [
     { name: 'Auth', description: 'Authentication and profile endpoints' },
     { name: 'Cash', description: 'Cash transaction management' },

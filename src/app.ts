@@ -18,15 +18,23 @@ void import('./db').catch(() => undefined);
 
 const app = new Hono();
 
+// Helper to check if an origin is allowed for CORS
+const isOriginAllowed = (origin: string): boolean => {
+  // Always allow the configured frontend URL
+  if (origin === env.frontendUrl) return true;
+  
+  // Allow Vercel preview deployments (kasandra-frontend.vercel.app)
+  if (origin.endsWith('.vercel.app')) return true;
+  
+  // Allow localhost in development
+  if (env.nodeEnv === 'development' && /^https?:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  
+  return false;
+};
+
 app.options('*', (c) => {
-  const origin = c.req.header('origin');
-  const allowedOrigin =
-    origin && (
-      origin === env.frontendUrl ||
-      (env.nodeEnv === 'development' && /^https?:\/\/localhost(:\d+)?$/.test(origin))
-    )
-      ? origin
-      : env.frontendUrl;
+  const origin = c.req.header('origin') ?? '';
+  const allowedOrigin = isOriginAllowed(origin) ? origin : env.frontendUrl;
   return c.text('OK', {
     headers: {
       'Access-Control-Allow-Origin': allowedOrigin,
@@ -39,17 +47,11 @@ app.options('*', (c) => {
 
 app.use('*', async (c, next) => {
   await next();
-  const origin = c.req.header('origin');
-  // Allow all localhost origins in development for convenience
-  if (origin) {
-    const isAllowed =
-      origin === env.frontendUrl ||
-      (env.nodeEnv === 'development' && /^https?:\/\/localhost(:\d+)?$/.test(origin));
-    if (isAllowed) {
-      c.header('Access-Control-Allow-Origin', origin);
-      c.header('Access-Control-Allow-Credentials', 'true');
-      c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    }
+  const origin = c.req.header('origin') ?? '';
+  if (origin && isOriginAllowed(origin)) {
+    c.header('Access-Control-Allow-Origin', origin);
+    c.header('Access-Control-Allow-Credentials', 'true');
+    c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   }
   return c;
 });

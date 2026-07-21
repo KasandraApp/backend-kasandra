@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "bun run src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "start": "node dist/src/server.js",
+    "test": "vitest run",
+    "db:migrate": "drizzle-kit push"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.6.1",
