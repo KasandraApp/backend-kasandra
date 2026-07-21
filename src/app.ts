@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { swaggerUI } from '@hono/swagger-ui';
-import { loggerMiddleware } from './middleware/logger.middleware';
+import { loggerMiddleware } from './middleware/logger.middleware.js';
 import { errorMiddleware } from './middleware/error.middleware';
 import { API_PREFIX } from './config/constants';
 import healthRoute from './routes/health.route';
