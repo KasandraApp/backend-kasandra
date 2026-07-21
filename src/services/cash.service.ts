@@ -1,15 +1,17 @@
 import { createCashTransactionSchema, updateCashTransactionSchema } from '../schemas/cash.schema';
 import { fail, ok, created } from '../utils/response';
-import { createId, nowIso, store } from '../utils/in-memory-store';
 import { forecastService } from './forecast.service';
 import { cashRepository } from '../repositories/cash.repository';
+
+const nowIso = () => new Date().toISOString();
 
 const normalizeTransaction = (tx: Record<string, unknown>) => ({
   id: String(tx.id),
   transaction_date: typeof tx.transactionDate === 'string' ? tx.transactionDate : '',
-  type: tx.type === 'expense' ? 'expense' : 'income',
+  type: tx.type === 'expense' ? 'pengeluaran' : 'pemasukan',
   category: typeof tx.category === 'string' ? tx.category : '',
   amount: Number(tx.amount ?? 0),
+  note: typeof tx.note === 'string' ? tx.note : undefined,
   created_at: typeof tx.createdAt === 'string' ? tx.createdAt : nowIso(),
   updated_at: typeof tx.updatedAt === 'string' ? tx.updatedAt : nowIso(),
 });
@@ -55,43 +57,17 @@ export const cashService = {
       return fail('Invalid cash transaction payload', parsed.error.issues.map((issue) => ({ field: issue.path.join('.'), message: issue.message })));
     }
 
-    const transaction = {
-      id: createId(),
-      businessProfileId,
-      transactionDate: parsed.data.transaction_date,
-      type: parsed.data.type,
-      category: parsed.data.category,
-      amount: parsed.data.amount,
-      createdAt: nowIso(),
-      updatedAt: nowIso(),
-    };
-
     try {
       const persisted = await cashRepository.create({
         businessProfileId,
-        transactionDate: parsed.data.transaction_date,
-        type: parsed.data.type,
-        amount: String(parsed.data.amount),
-        category: parsed.data.category,
+        transactionDate: parsed.data.tanggal,
+        type: parsed.data.jenis === 'pengeluaran' ? 'expense' : 'income',
+        amount: String(parsed.data.jumlah),
+        category: parsed.data.kategori,
+        note: parsed.data.catatan,
       });
       const normalized = normalizeTransaction(persisted as Record<string, unknown>);
 
-      store.cashTransactions.push({
-        id: persisted.id,
-        businessProfileId: persisted.businessProfileId,
-        transactionDate: persisted.transactionDate,
-        type: persisted.type === 'expense' ? 'expense' : 'income',
-        category: persisted.category ?? '',
-        amount: Number(persisted.amount),
-        createdAt:
-          persisted.createdAt instanceof Date
-            ? persisted.createdAt.toISOString()
-            : String(persisted.createdAt),
-        updatedAt:
-          persisted.updatedAt instanceof Date
-            ? persisted.updatedAt.toISOString()
-            : String(persisted.updatedAt),
-      });
       await forecastService.recalculate(businessProfileId);
       return created(normalized, 'Transaksi berhasil dibuat');
     } catch (error) {
@@ -107,10 +83,11 @@ export const cashService = {
 
     try {
       const updated = await cashRepository.update(id, businessProfileId, {
-        transactionDate: parsed.data.transaction_date,
-        type: parsed.data.type,
-        amount: parsed.data.amount ? String(parsed.data.amount) : undefined,
-        category: parsed.data.category,
+        transactionDate: parsed.data.tanggal,
+        type: parsed.data.jenis ? (parsed.data.jenis === 'pengeluaran' ? 'expense' : 'income') : undefined,
+        amount: parsed.data.jumlah ? String(parsed.data.jumlah) : undefined,
+        category: parsed.data.kategori,
+        note: parsed.data.catatan,
       });
       if (!updated) {
         return fail('Transaction not found');

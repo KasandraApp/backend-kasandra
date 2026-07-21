@@ -11,4 +11,5 @@ export const env = {
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? '',
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
   googleRedirectUri: process.env.GOOGLE_REDIRECT_URI ?? '',
+  frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:5173',
 };

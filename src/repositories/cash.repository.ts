@@ -49,6 +49,7 @@ export const cashRepository = {
     type: 'income' | 'expense';
     amount: string;
     category?: string;
+    note?: string;
   }) => {
     const [tx] = await db.insert(cashTransactions).values([input] as any).returning();
     return tx;
@@ -62,7 +63,8 @@ export const cashRepository = {
       type: 'income' | 'expense';
       amount: string;
       category: string;
-    }> ,
+      note: string;
+    }>,
   ) => {
     const [tx] = await db
       .update(cashTransactions)

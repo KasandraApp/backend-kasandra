@@ -49,7 +49,6 @@ import { whatIfService } from '../src/services/whatif.service';
 import { alertService } from '../src/services/alert.service';
 import { cashService } from '../src/services/cash.service';
 import { inventoryService } from '../src/services/inventory.service';
-import { store } from '../src/utils/in-memory-store';
 
 describe('api contract alignment', () => {
   beforeEach(() => {
@@ -59,11 +58,6 @@ describe('api contract alignment', () => {
     alertReplaceActiveMock.mockReset();
     alertFindActiveMock.mockReset();
     scenarioCreateMock.mockReset();
-    store.cashTransactions = [] as any;
-    store.inventoryItems = [] as any;
-    store.forecastRuns = [] as any;
-    store.alerts = [] as any;
-    store.scenarios = [] as any;
   });
 
   it('returns forecast projection with value-based fields and snake_case inventory fields', async () => {

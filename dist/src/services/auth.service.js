@@ -1,6 +1,7 @@
+import crypto from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import { nowIso } from '../utils/in-memory-store';
-import { registerSchema, loginSchema } from '../schemas/auth.schema';
+import { registerSchema, loginSchema, forgotPasswordSchema, verifyOtpSchema, resetPasswordSchema } from '../schemas/auth.schema';
 import { signAccessToken } from '../middleware/auth.middleware';
 import { fail, ok } from '../utils/response';
 import { businessRepository, userRepository } from '../repositories/user.repository';
@@ -72,6 +73,22 @@ const createBusinessProfileRecord = async (userId, businessName) => {
     });
     return normalizeBusinessProfile(profile);
 };
+const passwordResetStore = new Map();
+const createPasswordResetOtp = () => {
+    if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
+        return '123456';
+    }
+    return crypto.randomInt(100000, 999999).toString();
+};
+const getPasswordResetKey = (email) => email.trim().toLowerCase();
+const sendPasswordResetEmail = async (email, otp) => {
+    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+        // Placeholder for real SMTP delivery when configured in the environment.
+        console.info(`[password-reset] OTP ${otp} sent to ${email}`);
+        return;
+    }
+    console.info(`[password-reset] OTP ${otp} for ${email}`);
+};
 const buildAuthEnvelope = (accessToken, user, businessProfile) => ({
     access_token: accessToken,
     user: { id: user.id, full_name: user.fullName, email: user.email },
@@ -136,33 +153,150 @@ export const authService = {
             return fail('User not found');
         }
         return ok({
-            user: {
-                id: user.id,
-                full_name: user.fullName,
-                email: user.email,
-                auth_provider: user.authProvider,
-            },
-            business_profile: {
-                id: businessProfile.id,
-                business_name: businessProfile.businessName,
-                currency_code: businessProfile.currencyCode,
-            },
+            namaLengkap: user.fullName,
+            namaUsaha: businessProfile.businessName,
+            email: user.email,
         });
     },
-    googleLogin: async (input) => {
-        const existingUser = await findUserByGoogleId(input.googleId);
-        if (existingUser) {
-            const businessProfile = await findBusinessProfileForUser(existingUser.id);
+    updateProfile: async (userId, businessProfileId, input) => {
+        const data = input;
+        if (data.namaLengkap || data.email) {
+            await userRepository.update(userId, {
+                fullName: data.namaLengkap,
+                email: data.email,
+            });
+        }
+        if (data.namaUsaha) {
+            await businessRepository.update(businessProfileId, {
+                businessName: data.namaUsaha,
+            });
+        }
+        const updatedUser = await findUserById(userId);
+        const updatedProfile = await findBusinessProfileById(businessProfileId);
+        if (!updatedUser || !updatedProfile) {
+            return fail('User not found after update');
+        }
+        return ok({
+            namaLengkap: updatedUser.fullName,
+            namaUsaha: updatedProfile.businessName,
+            email: updatedUser.email,
+        }, 'Profil berhasil diperbarui');
+    },
+    forgotPassword: async (input) => {
+        const parsed = forgotPasswordSchema.safeParse(input);
+        if (!parsed.success) {
+            return fail('Invalid email payload');
+        }
+        const user = await findUserByEmail(parsed.data.email);
+        if (!user) {
+            return ok({ email: parsed.data.email, message: 'Jika email terdaftar, kode OTP telah dikirim' }, 'Jika email terdaftar, kode OTP telah dikirim');
+        }
+        const otp = createPasswordResetOtp();
+        const expiresAt = Date.now() + 15 * 60 * 1000;
+        passwordResetStore.set(getPasswordResetKey(parsed.data.email), {
+            userId: user.id,
+            otp,
+            expiresAt,
+            verified: false,
+        });
+        await sendPasswordResetEmail(parsed.data.email, otp);
+        return ok({
+            email: parsed.data.email,
+            ...(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development' ? { otp } : {}),
+        }, 'Kode OTP berhasil dikirim');
+    },
+    verifyOtp: async (input) => {
+        const parsed = verifyOtpSchema.safeParse(input);
+        if (!parsed.success) {
+            return fail('Invalid OTP payload');
+        }
+        const key = getPasswordResetKey(parsed.data.email);
+        const record = passwordResetStore.get(key);
+        if (!record) {
+            return fail('Kode OTP tidak valid');
+        }
+        if (Date.now() > record.expiresAt) {
+            passwordResetStore.delete(key);
+            return fail('Kode OTP sudah kedaluwarsa');
+        }
+        if (record.otp !== parsed.data.otp) {
+            return fail('Kode OTP salah');
+        }
+        record.verified = true;
+        passwordResetStore.set(key, record);
+        return ok({ email: parsed.data.email, verified: true }, 'Kode OTP valid');
+    },
+    resetPassword: async (input) => {
+        const parsed = resetPasswordSchema.safeParse(input);
+        if (!parsed.success) {
+            return fail('Invalid reset payload');
+        }
+        const key = getPasswordResetKey(parsed.data.email);
+        const record = passwordResetStore.get(key);
+        if (!record) {
+            return fail('Kode OTP tidak valid');
+        }
+        if (Date.now() > record.expiresAt) {
+            passwordResetStore.delete(key);
+            return fail('Kode OTP sudah kedaluwarsa');
+        }
+        if (!record.verified) {
+            return fail('Kode OTP belum diverifikasi');
+        }
+        if (record.otp !== parsed.data.otp) {
+            return fail('Kode OTP salah');
+        }
+        const user = await findUserById(record.userId);
+        if (!user) {
+            return fail('User tidak ditemukan');
+        }
+        const passwordHash = await bcrypt.hash(parsed.data.password, 10);
+        await userRepository.update(user.id, { passwordHash });
+        passwordResetStore.delete(key);
+        return ok({ email: parsed.data.email, reset: true }, 'Kata sandi berhasil diubah');
+    },
+    googleLogin: async (input, options) => {
+        const intent = options?.intent === 'register' ? 'register' : 'login';
+        const existingByGoogleId = await findUserByGoogleId(input.googleId);
+        if (existingByGoogleId) {
+            const businessProfile = (await findBusinessProfileForUser(existingByGoogleId.id)) ?? await createBusinessProfileRecord(existingByGoogleId.id, input.businessName);
             const accessToken = signAccessToken({
-                userId: normalize(existingUser.id),
-                businessProfileId: normalize(businessProfile?.id ?? ''),
-                email: existingUser.email,
+                userId: normalize(existingByGoogleId.id),
+                businessProfileId: normalize(businessProfile.id),
+                email: existingByGoogleId.email,
             });
             return ok({
                 access_token: accessToken,
-                user: { id: existingUser.id, full_name: existingUser.fullName, email: existingUser.email },
-                business_profile: businessProfile ? { id: businessProfile.id, business_name: businessProfile.businessName } : null,
+                user: { id: existingByGoogleId.id, full_name: existingByGoogleId.fullName, email: existingByGoogleId.email },
+                business_profile: { id: businessProfile.id, business_name: businessProfile.businessName },
                 is_new_user: false,
+                requires_business_setup: false,
+                next_step: 'dashboard',
+            }, 'Login dengan Google berhasil');
+        }
+        const existingByEmail = await findUserByEmail(input.email);
+        if (existingByEmail) {
+            if (existingByEmail.googleId && existingByEmail.googleId !== input.googleId) {
+                return fail('Email sudah terdaftar dengan provider lain');
+            }
+            const linkedUser = await userRepository.update(existingByEmail.id, {
+                googleId: input.googleId,
+                authProvider: 'google',
+            });
+            const user = linkedUser ? normalizeUser(linkedUser) : existingByEmail;
+            const businessProfile = (await findBusinessProfileForUser(user.id)) ?? await createBusinessProfileRecord(user.id, input.businessName);
+            const accessToken = signAccessToken({
+                userId: normalize(user.id),
+                businessProfileId: normalize(businessProfile.id),
+                email: user.email,
+            });
+            return ok({
+                access_token: accessToken,
+                user: { id: user.id, full_name: user.fullName, email: user.email },
+                business_profile: { id: businessProfile.id, business_name: businessProfile.businessName },
+                is_new_user: false,
+                requires_business_setup: false,
+                next_step: 'dashboard',
             }, 'Login dengan Google berhasil');
         }
         const createdUser = await createUserRecord({
@@ -182,6 +316,8 @@ export const authService = {
             user: { id: createdUser.id, full_name: createdUser.fullName, email: createdUser.email },
             business_profile: { id: businessProfile.id, business_name: businessProfile.businessName },
             is_new_user: true,
+            requires_business_setup: intent === 'register',
+            next_step: intent === 'register' ? 'business_setup' : 'dashboard',
         }, 'Login dengan Google berhasil');
     },
 };

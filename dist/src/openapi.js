@@ -51,8 +51,13 @@ export const openApiSpec = {
                                 required: ['email', 'password', 'name'],
                                 properties: {
                                     name: { type: 'string' },
+                                    namaLengkap: { type: 'string' },
                                     email: { type: 'string', format: 'email' },
                                     password: { type: 'string', minLength: 8 },
+                                    kataSandi: { type: 'string', minLength: 8 },
+                                    business_name: { type: 'string' },
+                                    businessName: { type: 'string' },
+                                    namaUsaha: { type: 'string' },
                                 },
                             },
                         },

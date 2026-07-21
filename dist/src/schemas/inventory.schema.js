@@ -1,9 +1,9 @@
 import { z } from 'zod';
 export const createInventoryItemSchema = z.object({
-    item_name: z.string().min(1).max(255),
-    current_stock: z.number().min(0),
-    average_sales_per_day: z.number().min(0),
-    unit: z.enum(['kg', 'liter', 'pcs', 'pack']),
+    namaBarang: z.string().min(1).max(255),
+    jumlahStok: z.number().min(0),
+    rataRataTerjualPerHari: z.number().min(0),
+    satuan: z.enum(['kg', 'liter', 'pcs', 'pack']),
     minimum_threshold: z.number().min(0).optional(),
 });
 export const updateInventoryItemSchema = createInventoryItemSchema.partial().superRefine((value, ctx) => {

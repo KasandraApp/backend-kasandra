@@ -4,6 +4,7 @@ import { authMiddleware } from '../middleware/auth.middleware';
 const inventoryRoute = new Hono();
 inventoryRoute.get('/', authMiddleware, (c) => inventoryController.list(c));
 inventoryRoute.post('/', authMiddleware, (c) => inventoryController.create(c));
+inventoryRoute.put('/:id', authMiddleware, (c) => inventoryController.update(c));
 inventoryRoute.patch('/:id', authMiddleware, (c) => inventoryController.update(c));
 inventoryRoute.delete('/:id', authMiddleware, (c) => inventoryController.delete(c));
 export default inventoryRoute;

@@ -18,7 +18,13 @@ export const userRepository = {
     return user ?? null;
   },
 
-  create: async (input: { fullName: string; email: string; passwordHash?: string | null; googleId?: string | null; authProvider?: string }) => {
+  create: async (input: {
+    fullName: string;
+    email: string;
+    passwordHash?: string | null;
+    googleId?: string | null;
+    authProvider?: 'email' | 'google';
+  }) => {
     const [user] = await db
       .insert(users)
       .values({
@@ -44,7 +50,7 @@ export const userRepository = {
 
 export const businessRepository = {
   findByUserId: async (userId: string) => {
-    return db.select().from(businessProfiles).where(eq(businessProfiles.userId, userId));
+    return await db.select().from(businessProfiles).where(eq(businessProfiles.userId, userId));
   },
 
   findById: async (id: string) => {

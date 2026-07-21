@@ -11,11 +11,48 @@ import forecastRoute from './routes/forecast.route';
 import whatIfRoute from './routes/whatif.route';
 import alertRoute from './routes/alert.route';
 import { openApiSpec } from './openapi';
+import { env } from './config/env';
 
 // Avoid eager DB initialization during tests and local bootstrapping.
 void import('./db').catch(() => undefined);
 
 const app = new Hono();
+
+app.options('*', (c) => {
+  const origin = c.req.header('origin');
+  const allowedOrigin =
+    origin && (
+      origin === env.frontendUrl ||
+      (env.nodeEnv === 'development' && /^https?:\/\/localhost(:\d+)?$/.test(origin))
+    )
+      ? origin
+      : env.frontendUrl;
+  return c.text('OK', {
+    headers: {
+      'Access-Control-Allow-Origin': allowedOrigin,
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Credentials': 'true',
+    },
+  });
+});
+
+app.use('*', async (c, next) => {
+  await next();
+  const origin = c.req.header('origin');
+  // Allow all localhost origins in development for convenience
+  if (origin) {
+    const isAllowed =
+      origin === env.frontendUrl ||
+      (env.nodeEnv === 'development' && /^https?:\/\/localhost(:\d+)?$/.test(origin));
+    if (isAllowed) {
+      c.header('Access-Control-Allow-Origin', origin);
+      c.header('Access-Control-Allow-Credentials', 'true');
+      c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
+  }
+  return c;
+});
 
 app.use('*', loggerMiddleware);
 app.use('*', errorMiddleware);

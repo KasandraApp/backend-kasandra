@@ -1,13 +1,16 @@
 import { env } from '../config/env';
 
 export const oauthService = {
-  buildAuthUrl: (redirectUri: string, clientId: string) => {
+  buildAuthUrl: (redirectUri: string, clientId: string, state?: 'register' | 'login') => {
     const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
     url.searchParams.set('client_id', clientId);
     url.searchParams.set('redirect_uri', redirectUri);
     url.searchParams.set('response_type', 'code');
     url.searchParams.set('scope', 'openid email profile');
     url.searchParams.set('access_type', 'offline');
+    if (state) {
+      url.searchParams.set('state', state);
+    }
     return url.toString();
   },
 

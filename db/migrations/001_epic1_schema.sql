@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS cash_transactions (
     type VARCHAR(10) NOT NULL CHECK (type IN ('income', 'expense')),
     category VARCHAR(100) NOT NULL,
     amount NUMERIC(15,2) NOT NULL CHECK (amount > 0),
+    note TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

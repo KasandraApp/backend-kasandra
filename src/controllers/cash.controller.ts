@@ -12,14 +12,20 @@ export const cashController = {
       from_date: query.from_date,
       to_date: query.to_date,
     });
-    return c.json(result, result.success ? 200 : 400);
+    if (result.success) {
+      return c.json(result.data, 200);
+    }
+    return c.json(result, 400);
   },
 
   create: async (c: Context) => {
     const auth = c.get('auth');
     const payload = await c.req.json().catch(() => ({}));
     const result = await cashService.create(auth.businessProfileId, payload);
-    return c.json(result, result.success ? 201 : 400);
+    if (result.success) {
+      return c.json(result.data, 201);
+    }
+    return c.json(result, 400);
   },
 
   getById: async (c: Context) => {
@@ -29,7 +35,10 @@ export const cashController = {
       return c.json({ success: false, message: 'Missing id' }, 400);
     }
     const result = await cashService.get(auth.businessProfileId, id);
-    return c.json(result, result.success ? 200 : 404);
+    if (result.success) {
+      return c.json(result.data, 200);
+    }
+    return c.json(result, 404);
   },
 
   update: async (c: Context) => {
@@ -40,7 +49,10 @@ export const cashController = {
     }
     const payload = await c.req.json().catch(() => ({}));
     const result = await cashService.update(auth.businessProfileId, id, payload);
-    return c.json(result, result.success ? 200 : 400);
+    if (result.success) {
+      return c.json(result.data, 200);
+    }
+    return c.json(result, 400);
   },
 
   delete: async (c: Context) => {
@@ -50,6 +62,9 @@ export const cashController = {
       return c.json({ success: false, message: 'Missing id' }, 400);
     }
     const result = await cashService.delete(auth.businessProfileId, id);
-    return c.json(result, result.success ? 200 : 404);
+    if (result.success) {
+      return c.json(result.data, 200);
+    }
+    return c.json(result, 404);
   },
 };

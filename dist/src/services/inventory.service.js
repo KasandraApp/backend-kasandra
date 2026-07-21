@@ -47,10 +47,10 @@ export const inventoryService = {
         const item = {
             id: createId(),
             businessProfileId,
-            itemName: parsed.data.item_name,
-            currentStock: parsed.data.current_stock,
-            averageSalesPerDay: parsed.data.average_sales_per_day,
-            unit: parsed.data.unit,
+            itemName: parsed.data.namaBarang,
+            currentStock: parsed.data.jumlahStok,
+            averageSalesPerDay: parsed.data.rataRataTerjualPerHari,
+            unit: parsed.data.satuan,
             minimumThreshold: 0,
             createdAt: nowIso(),
             updatedAt: nowIso(),
@@ -58,10 +58,10 @@ export const inventoryService = {
         try {
             const persisted = await inventoryRepository.createItem({
                 businessProfileId,
-                itemName: parsed.data.item_name,
-                currentStock: String(parsed.data.current_stock),
-                averageSalesPerDay: String(parsed.data.average_sales_per_day),
-                unit: parsed.data.unit,
+                itemName: parsed.data.namaBarang,
+                currentStock: String(parsed.data.jumlahStok),
+                averageSalesPerDay: String(parsed.data.rataRataTerjualPerHari),
+                unit: parsed.data.satuan,
                 minimumThreshold: '0',
             });
             const normalized = normalizeItem(persisted);
@@ -80,10 +80,10 @@ export const inventoryService = {
         }
         try {
             const updated = await inventoryRepository.updateItem(id, businessProfileId, {
-                itemName: parsed.data.item_name,
-                currentStock: parsed.data.current_stock ? String(parsed.data.current_stock) : undefined,
-                averageSalesPerDay: parsed.data.average_sales_per_day ? String(parsed.data.average_sales_per_day) : undefined,
-                unit: parsed.data.unit,
+                itemName: parsed.data.namaBarang,
+                currentStock: parsed.data.jumlahStok ? String(parsed.data.jumlahStok) : undefined,
+                averageSalesPerDay: parsed.data.rataRataTerjualPerHari ? String(parsed.data.rataRataTerjualPerHari) : undefined,
+                unit: parsed.data.satuan,
             });
             if (!updated) {
                 return fail('Item not found');

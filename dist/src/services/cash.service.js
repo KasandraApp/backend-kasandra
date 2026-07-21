@@ -6,9 +6,10 @@ import { cashRepository } from '../repositories/cash.repository';
 const normalizeTransaction = (tx) => ({
     id: String(tx.id),
     transaction_date: typeof tx.transactionDate === 'string' ? tx.transactionDate : '',
-    type: tx.type === 'expense' ? 'expense' : 'income',
+    type: tx.type === 'expense' ? 'pengeluaran' : 'pemasukan',
     category: typeof tx.category === 'string' ? tx.category : '',
     amount: Number(tx.amount ?? 0),
+    note: typeof tx.note === 'string' ? tx.note : undefined,
     created_at: typeof tx.createdAt === 'string' ? tx.createdAt : nowIso(),
     updated_at: typeof tx.updatedAt === 'string' ? tx.updatedAt : nowIso(),
 });
@@ -51,20 +52,22 @@ export const cashService = {
         const transaction = {
             id: createId(),
             businessProfileId,
-            transactionDate: parsed.data.transaction_date,
-            type: parsed.data.type,
-            category: parsed.data.category,
-            amount: parsed.data.amount,
+            transactionDate: parsed.data.tanggal,
+            type: parsed.data.jenis === 'pengeluaran' ? 'expense' : 'income',
+            category: parsed.data.kategori,
+            amount: parsed.data.jumlah,
+            note: parsed.data.catatan,
             createdAt: nowIso(),
             updatedAt: nowIso(),
         };
         try {
             const persisted = await cashRepository.create({
                 businessProfileId,
-                transactionDate: parsed.data.transaction_date,
-                type: parsed.data.type,
-                amount: String(parsed.data.amount),
-                category: parsed.data.category,
+                transactionDate: parsed.data.tanggal,
+                type: parsed.data.jenis === 'pengeluaran' ? 'expense' : 'income',
+                amount: String(parsed.data.jumlah),
+                category: parsed.data.kategori,
+                note: parsed.data.catatan,
             });
             const normalized = normalizeTransaction(persisted);
             store.cashTransactions.push({
@@ -95,10 +98,11 @@ export const cashService = {
         }
         try {
             const updated = await cashRepository.update(id, businessProfileId, {
-                transactionDate: parsed.data.transaction_date,
-                type: parsed.data.type,
-                amount: parsed.data.amount ? String(parsed.data.amount) : undefined,
-                category: parsed.data.category,
+                transactionDate: parsed.data.tanggal,
+                type: parsed.data.jenis ? (parsed.data.jenis === 'pengeluaran' ? 'expense' : 'income') : undefined,
+                amount: parsed.data.jumlah ? String(parsed.data.jumlah) : undefined,
+                category: parsed.data.kategori,
+                note: parsed.data.catatan,
             });
             if (!updated) {
                 return fail('Transaction not found');

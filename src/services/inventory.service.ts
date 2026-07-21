@@ -1,8 +1,9 @@
 import { createInventoryItemSchema, updateInventoryItemSchema } from '../schemas/inventory.schema';
 import { ok, fail, created } from '../utils/response';
-import { createId, nowIso, store } from '../utils/in-memory-store';
 import { forecastService } from './forecast.service';
 import { inventoryRepository } from '../repositories/inventory.repository';
+
+const nowIso = () => new Date().toISOString();
 
 function buildItemResponse(item: { id: string; itemName: string; currentStock: number; averageSalesPerDay: number; unit: string; minimumThreshold: number; createdAt: string; updatedAt: string }) {
   const daysRemaining = item.averageSalesPerDay > 0 ? item.currentStock / item.averageSalesPerDay : Infinity;
@@ -49,29 +50,16 @@ export const inventoryService = {
       return fail('Invalid inventory payload', parsed.error.issues.map((issue) => ({ field: issue.path.join('.'), message: issue.message })));
     }
 
-    const item = {
-      id: createId(),
-      businessProfileId,
-      itemName: parsed.data.item_name,
-      currentStock: parsed.data.current_stock,
-      averageSalesPerDay: parsed.data.average_sales_per_day,
-      unit: parsed.data.unit as 'kg' | 'liter' | 'pcs' | 'pack',
-      minimumThreshold: 0,
-      createdAt: nowIso(),
-      updatedAt: nowIso(),
-    };
-
     try {
       const persisted = await inventoryRepository.createItem({
         businessProfileId,
-        itemName: parsed.data.item_name,
-        currentStock: String(parsed.data.current_stock),
-        averageSalesPerDay: String(parsed.data.average_sales_per_day),
-        unit: parsed.data.unit,
+        itemName: parsed.data.namaBarang,
+        currentStock: String(parsed.data.jumlahStok),
+        averageSalesPerDay: String(parsed.data.rataRataTerjualPerHari),
+        unit: parsed.data.satuan,
         minimumThreshold: '0',
       });
       const normalized = normalizeItem(persisted as Record<string, unknown>);
-      store.inventoryItems.push(normalized as typeof store.inventoryItems[number]);
       await forecastService.recalculate(businessProfileId);
       return created(buildItemResponse(normalized), 'Stok berhasil ditambahkan');
     } catch (error) {
@@ -87,10 +75,10 @@ export const inventoryService = {
 
     try {
       const updated = await inventoryRepository.updateItem(id, businessProfileId, {
-        itemName: parsed.data.item_name,
-        currentStock: parsed.data.current_stock ? String(parsed.data.current_stock) : undefined,
-        averageSalesPerDay: parsed.data.average_sales_per_day ? String(parsed.data.average_sales_per_day) : undefined,
-        unit: parsed.data.unit,
+        itemName: parsed.data.namaBarang,
+        currentStock: parsed.data.jumlahStok ? String(parsed.data.jumlahStok) : undefined,
+        averageSalesPerDay: parsed.data.rataRataTerjualPerHari ? String(parsed.data.rataRataTerjualPerHari) : undefined,
+        unit: parsed.data.satuan,
       });
       if (!updated) {
         return fail('Item not found');

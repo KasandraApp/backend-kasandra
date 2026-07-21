@@ -1,4 +1,3 @@
-import { createId, nowIso } from '../utils/in-memory-store';
 import { whatIfSimulateSchema } from '../schemas/whatif.schema';
 import { ok, fail } from '../utils/response';
 import { projectCash, applyWhatIfParameters, classifySimulationScenario } from '../utils/calculation';
@@ -36,7 +35,6 @@ export const whatIfService = {
       cash_projection: projection.map((point) => ({ day: point.day, label: point.label, value: point.value })),
     };
 
-    const scenarioId = createId();
     try {
       const persisted = await scenarioRepository.create({
         businessProfileId,
@@ -44,7 +42,6 @@ export const whatIfService = {
         parameterJson: parsed.data,
         resultJson: result,
       });
-      const scenarioPayload = { id: String(persisted.id), businessProfileId, scenarioName, parameterJson: parsed.data, resultJson: result, createdAt: nowIso(), updatedAt: nowIso() };
       return ok({ ...result, scenario_id: String(persisted.id) }, 'Skenario berhasil disimpan');
     } catch (error) {
       return fail('Database unavailable while saving the scenario', [{ field: 'database', message: error instanceof Error ? error.message : 'Unknown database error' }]);

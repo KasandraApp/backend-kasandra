@@ -49,6 +49,7 @@ export const cashTransactions = pgTable(
     type: varchar('type', { length: 10 }).notNull(),
     category: varchar('category', { length: 100 }).notNull(),
     amount: numeric('amount', { precision: 15, scale: 2 }).notNull(),
+    note: text('note'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
