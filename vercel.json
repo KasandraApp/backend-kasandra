@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx tsup",
+  "buildCommand": "npx vite build",
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/[[route]]" }
