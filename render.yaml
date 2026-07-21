@@ -4,7 +4,7 @@ services:
   - type: web
     name: kasandra-backend
     runtime: node
-    repo: https://github.com/your-username/kasandra
+    repo: https://github.com/KasandraApp/backend-kasandra
     branch: main
     rootDir: backend-kasandra
     buildCommand: npm install && npm run build
