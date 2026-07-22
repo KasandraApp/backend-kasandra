@@ -7,7 +7,7 @@ export const openApiSpec = {
   },
   servers: [
     { url: 'http://localhost:3000', description: 'Local development server' },
-    { url: 'https://kasandra-backend.onrender.com', description: 'Production server (Render)' },
+    { url: 'https://backend-kasandra.vercel.app', description: 'Production server (Vercel)' },
   ],
   tags: [
     { name: 'Auth', description: 'Authentication and profile endpoints' },

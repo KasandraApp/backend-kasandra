@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run src/server.ts",
+    "build": "tsup",
     "test": "vitest run",
     "db:migrate": "drizzle-kit push"
   },
