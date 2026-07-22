@@ -1,5 +1,5 @@
 import { desc, eq } from 'drizzle-orm';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import { forecastRuns } from '../db/schema.js';
 
 export const forecastRepository = {

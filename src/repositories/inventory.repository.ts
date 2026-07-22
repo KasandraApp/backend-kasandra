@@ -1,5 +1,5 @@
 import { and, desc, eq } from 'drizzle-orm';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import { inventoryItems, inventoryMovements } from '../db/schema.js';
 
 export const inventoryRepository = {

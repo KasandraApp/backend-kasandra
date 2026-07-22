@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import { businessProfiles, users } from '../db/schema.js';
 
 export const userRepository = {

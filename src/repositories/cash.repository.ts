@@ -1,5 +1,5 @@
 import { and, desc, eq, gte, lte } from 'drizzle-orm';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import { cashTransactions } from '../db/schema.js';
 
 export const cashRepository = {
