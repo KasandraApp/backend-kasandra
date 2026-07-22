@@ -4,7 +4,7 @@ import { loggerMiddleware } from './middleware/logger.middleware.js';
 import { errorMiddleware } from './middleware/error.middleware.js';
 import { API_PREFIX } from './config/constants.js';
 import healthRoute from './routes/health.route.js';
-import authRoute from './routes/auth';
+import authRoute from './routes/auth/index.js';
 import cashRoute from './routes/cash.route.js';
 import inventoryRoute from './routes/inventory.route.js';
 import forecastRoute from './routes/forecast.route.js';
