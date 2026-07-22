@@ -7,7 +7,7 @@ import {
   findDeficitDay,
   calculateWeeklyChangePercent,
   generateAlerts,
-} from '../utils/calculation';
+} from '../utils/calculation.js';
 import { DEFAULT_HORIZON_DAYS } from '../config/constants.js';
 import { cashRepository } from '../repositories/cash.repository.js';
 import { inventoryRepository } from '../repositories/inventory.repository.js';

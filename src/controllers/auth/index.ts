@@ -1,4 +1,4 @@
-import { authService } from '../../services/auth';
+import { authService } from '../../services/auth.service.js';
 
 type AuthContext = {
   req: {

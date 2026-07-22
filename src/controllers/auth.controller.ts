@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { env } from '../config/env';
+import { env } from '../config/env.js';
 import { authService } from '../services/auth.service.js';
 import { oauthService } from '../services/oauth.service.js';
 
