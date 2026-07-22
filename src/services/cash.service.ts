@@ -1,7 +1,7 @@
-import { createCashTransactionSchema, updateCashTransactionSchema } from '../schemas/cash.schema';
-import { fail, ok, created } from '../utils/response';
-import { forecastService } from './forecast.service';
-import { cashRepository } from '../repositories/cash.repository';
+import { createCashTransactionSchema, updateCashTransactionSchema } from '../schemas/cash.schema.js';
+import { fail, ok, created } from '../utils/response.js';
+import { forecastService } from './forecast.service.js';
+import { cashRepository } from '../repositories/cash.repository.js';
 
 const nowIso = () => new Date().toISOString();
 

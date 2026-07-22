@@ -1,10 +1,10 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
-import { registerSchema, loginSchema, forgotPasswordSchema, verifyOtpSchema, resetPasswordSchema } from '../schemas/auth.schema';
-import { signAccessToken } from '../middleware/auth.middleware';
-import { fail, ok } from '../utils/response';
-import { businessRepository, userRepository } from '../repositories/user.repository';
+import { registerSchema, loginSchema, forgotPasswordSchema, verifyOtpSchema, resetPasswordSchema } from '../schemas/auth.schema.js';
+import { signAccessToken } from '../middleware/auth.middleware.js';
+import { fail, ok } from '../utils/response.js';
+import { businessRepository, userRepository } from '../repositories/user.repository.js';
 
 const nowIso = () => new Date().toISOString();
 

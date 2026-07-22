@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '../db';
-import { alerts } from '../db/schema';
+import { alerts } from '../db/schema.js';
 
 export const alertRepository = {
   findActive: async (businessProfileId: string) => {

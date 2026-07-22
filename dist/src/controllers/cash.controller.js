@@ -1,4 +1,4 @@
-import { cashService } from '../services/cash.service';
+import { cashService } from '../services/cash.service.js';
 export const cashController = {
     list: async (c) => {
         const auth = c.get('auth');

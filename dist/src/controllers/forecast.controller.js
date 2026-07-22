@@ -1,4 +1,4 @@
-import { forecastService } from '../services/forecast.service';
+import { forecastService } from '../services/forecast.service.js';
 export const forecastController = {
     getLatest: async (c) => {
         const auth = c.get('auth');

@@ -1,4 +1,4 @@
-import { authService } from '../../services/auth';
+import { authService } from '../../services/auth.service.js';
 export const authController = {
     register: async (c) => {
         const payload = await c.req.json();

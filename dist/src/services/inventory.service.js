@@ -1,8 +1,8 @@
-import { createInventoryItemSchema, updateInventoryItemSchema } from '../schemas/inventory.schema';
-import { ok, fail, created } from '../utils/response';
-import { createId, nowIso, store } from '../utils/in-memory-store';
-import { forecastService } from './forecast.service';
-import { inventoryRepository } from '../repositories/inventory.repository';
+import { createInventoryItemSchema, updateInventoryItemSchema } from '../schemas/inventory.schema.js';
+import { ok, fail, created } from '../utils/response.js';
+import { createId, nowIso, store } from '../utils/in-memory-store.js';
+import { forecastService } from './forecast.service.js';
+import { inventoryRepository } from '../repositories/inventory.repository.js';
 function buildItemResponse(item) {
     const daysRemaining = item.averageSalesPerDay > 0 ? item.currentStock / item.averageSalesPerDay : Infinity;
     const severity = daysRemaining <= 3 ? 'critical' : daysRemaining <= 7 ? 'warning' : 'info';

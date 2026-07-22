@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { whatIfController } from '../controllers/whatif.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { whatIfController } from '../controllers/whatif.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const whatIfRoute = new Hono();
 

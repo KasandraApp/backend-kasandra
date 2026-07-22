@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '../db';
-import { inventoryItems, inventoryMovements } from '../db/schema';
+import { inventoryItems, inventoryMovements } from '../db/schema.js';
 export const inventoryRepository = {
     findAllItems: async (businessProfileId) => {
         return db

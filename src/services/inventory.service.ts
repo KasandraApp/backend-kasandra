@@ -1,7 +1,7 @@
-import { createInventoryItemSchema, updateInventoryItemSchema } from '../schemas/inventory.schema';
-import { ok, fail, created } from '../utils/response';
-import { forecastService } from './forecast.service';
-import { inventoryRepository } from '../repositories/inventory.repository';
+import { createInventoryItemSchema, updateInventoryItemSchema } from '../schemas/inventory.schema.js';
+import { ok, fail, created } from '../utils/response.js';
+import { forecastService } from './forecast.service.js';
+import { inventoryRepository } from '../repositories/inventory.repository.js';
 
 const nowIso = () => new Date().toISOString();
 

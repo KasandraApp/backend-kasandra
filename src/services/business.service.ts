@@ -1,9 +1,9 @@
-import { ok, fail } from '../utils/response';
-import { businessRepository } from '../repositories/user.repository';
+import { ok, fail } from '../utils/response.js';
+import { businessRepository } from '../repositories/user.repository.js';
 import {
   createBusinessProfileSchema,
   updateBusinessProfileSchema,
-} from '../schemas/business.schema';
+} from '../schemas/business.schema.js';
 
 export const businessService = {
   list: async (userId: string | number) => {

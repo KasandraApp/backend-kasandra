@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { alertController } from '../controllers/alert.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { alertController } from '../controllers/alert.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const alertRoute = new Hono();
 

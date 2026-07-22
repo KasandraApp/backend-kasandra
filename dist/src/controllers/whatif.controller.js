@@ -1,4 +1,4 @@
-import { whatIfService } from '../services/whatif.service';
+import { whatIfService } from '../services/whatif.service.js';
 export const whatIfController = {
     simulate: async (c) => {
         const auth = c.get('auth');

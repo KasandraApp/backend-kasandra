@@ -1,4 +1,4 @@
-import { inventoryService } from '../services/inventory.service';
+import { inventoryService } from '../services/inventory.service.js';
 export const inventoryController = {
     list: async (c) => {
         const auth = c.get('auth');

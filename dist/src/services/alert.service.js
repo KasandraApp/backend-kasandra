@@ -1,5 +1,5 @@
-import { fail, ok } from '../utils/response';
-import { alertRepository } from '../repositories/alert.repository';
+import { fail, ok } from '../utils/response.js';
+import { alertRepository } from '../repositories/alert.repository.js';
 const normalizeAlert = (alert) => ({
     id: String(alert.id),
     alert_type: alert.alertType ?? alert.alert_type,

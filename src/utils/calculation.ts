@@ -1,4 +1,4 @@
-import { ALERT_THRESHOLDS, DEFAULT_HORIZON_DAYS } from '../config/constants';
+import { ALERT_THRESHOLDS, DEFAULT_HORIZON_DAYS } from '../config/constants.js';
 
 export type CashTransactionInput = {
   type: 'income' | 'expense';

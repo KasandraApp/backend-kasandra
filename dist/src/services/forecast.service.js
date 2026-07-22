@@ -1,10 +1,10 @@
-import { fail, ok } from '../utils/response';
-import { calculateAverageDaily, calculateCurrentBalance, projectCash, projectInventoryItems, findDeficitDay, calculateWeeklyChangePercent, generateAlerts, } from '../utils/calculation';
-import { DEFAULT_HORIZON_DAYS } from '../config/constants';
-import { cashRepository } from '../repositories/cash.repository';
-import { inventoryRepository } from '../repositories/inventory.repository';
-import { forecastRepository } from '../repositories/forecast.repository';
-import { alertRepository } from '../repositories/alert.repository';
+import { fail, ok } from '../utils/response.js';
+import { calculateAverageDaily, calculateCurrentBalance, projectCash, projectInventoryItems, findDeficitDay, calculateWeeklyChangePercent, generateAlerts, } from '../utils/calculation.js';
+import { DEFAULT_HORIZON_DAYS } from '../config/constants.js';
+import { cashRepository } from '../repositories/cash.repository.js';
+import { inventoryRepository } from '../repositories/inventory.repository.js';
+import { forecastRepository } from '../repositories/forecast.repository.js';
+import { alertRepository } from '../repositories/alert.repository.js';
 export const forecastService = {
     getLatest: async (businessProfileId) => {
         try {

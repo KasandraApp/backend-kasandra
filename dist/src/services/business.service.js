@@ -1,6 +1,6 @@
-import { ok, fail } from '../utils/response';
-import { businessRepository } from '../repositories/user.repository';
-import { createBusinessProfileSchema, updateBusinessProfileSchema, } from '../schemas/business.schema';
+import { ok, fail } from '../utils/response.js';
+import { businessRepository } from '../repositories/user.repository.js';
+import { createBusinessProfileSchema, updateBusinessProfileSchema, } from '../schemas/business.schema.js';
 export const businessService = {
     list: async (userId) => {
         const profiles = await businessRepository.findByUserId(String(userId));

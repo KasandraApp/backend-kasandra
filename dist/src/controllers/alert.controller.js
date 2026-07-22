@@ -1,4 +1,4 @@
-import { alertService } from '../services/alert.service';
+import { alertService } from '../services/alert.service.js';
 export const alertController = {
     list: async (c) => {
         const auth = c.get('auth');

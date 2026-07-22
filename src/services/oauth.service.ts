@@ -1,4 +1,4 @@
-import { env } from '../config/env';
+import { env } from '../config/env.js';
 
 export const oauthService = {
   buildAuthUrl: (redirectUri: string, clientId: string, state?: 'register' | 'login') => {

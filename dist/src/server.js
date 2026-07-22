@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
-import { env } from './config/env';
-import app from './app';
+import { env } from './config/env.js';
+import app from './app.js';
 const port = env.port;
 const server = createServer(async (req, res) => {
     const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);

@@ -1,6 +1,6 @@
 import type { Context, Next } from 'hono';
 import jwt from 'jsonwebtoken';
-import { env } from '../config/env';
+import { env } from '../config/env.js';
 
 export type AuthPayload = {
   userId: string;

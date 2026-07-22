@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { cashController } from '../controllers/cash.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { cashController } from '../controllers/cash.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const cashRoute = new Hono();
 

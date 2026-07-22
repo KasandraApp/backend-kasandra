@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { env } from './config/env';
+import { env } from './config/env.js';
 import app from './app';
 
 const port = env.port;

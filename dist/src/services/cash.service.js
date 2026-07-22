@@ -1,8 +1,8 @@
-import { createCashTransactionSchema, updateCashTransactionSchema } from '../schemas/cash.schema';
-import { fail, ok, created } from '../utils/response';
-import { createId, nowIso, store } from '../utils/in-memory-store';
-import { forecastService } from './forecast.service';
-import { cashRepository } from '../repositories/cash.repository';
+import { createCashTransactionSchema, updateCashTransactionSchema } from '../schemas/cash.schema.js';
+import { fail, ok, created } from '../utils/response.js';
+import { createId, nowIso, store } from '../utils/in-memory-store.js';
+import { forecastService } from './forecast.service.js';
+import { cashRepository } from '../repositories/cash.repository.js';
 const normalizeTransaction = (tx) => ({
     id: String(tx.id),
     transaction_date: typeof tx.transactionDate === 'string' ? tx.transactionDate : '',

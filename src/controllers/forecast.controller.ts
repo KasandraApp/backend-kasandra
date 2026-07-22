@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { forecastService } from '../services/forecast.service';
+import { forecastService } from '../services/forecast.service.js';
 
 export const forecastController = {
   getLatest: async (c: Context) => {

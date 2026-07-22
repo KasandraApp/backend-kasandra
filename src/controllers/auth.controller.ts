@@ -1,7 +1,7 @@
 import type { Context } from 'hono';
 import { env } from '../config/env';
-import { authService } from '../services/auth.service';
-import { oauthService } from '../services/oauth.service';
+import { authService } from '../services/auth.service.js';
+import { oauthService } from '../services/oauth.service.js';
 
 export const authController = {
   register: async (c: Context) => {

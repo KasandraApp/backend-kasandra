@@ -1,6 +1,6 @@
-import { env } from '../config/env';
-import { authService } from '../services/auth.service';
-import { oauthService } from '../services/oauth.service';
+import { env } from '../config/env.js';
+import { authService } from '../services/auth.service.js';
+import { oauthService } from '../services/oauth.service.js';
 export const authController = {
     register: async (c) => {
         const payload = await c.req.json().catch(() => ({}));

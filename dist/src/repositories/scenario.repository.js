@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '../db';
-import { whatIfScenarios } from '../db/schema';
+import { whatIfScenarios } from '../db/schema.js';
 export const scenarioRepository = {
     create: async (input) => {
         const [scenario] = await db.insert(whatIfScenarios).values([input]).returning();

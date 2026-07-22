@@ -1,6 +1,6 @@
 import { desc, eq } from 'drizzle-orm';
 import { db } from '../db';
-import { forecastRuns } from '../db/schema';
+import { forecastRuns } from '../db/schema.js';
 
 export const forecastRepository = {
   save: async (input: {

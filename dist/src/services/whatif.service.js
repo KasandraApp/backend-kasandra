@@ -1,10 +1,10 @@
-import { createId, nowIso } from '../utils/in-memory-store';
-import { whatIfSimulateSchema } from '../schemas/whatif.schema';
-import { ok, fail } from '../utils/response';
-import { projectCash, applyWhatIfParameters, classifySimulationScenario } from '../utils/calculation';
-import { DEFAULT_HORIZON_DAYS } from '../config/constants';
-import { generateScenarioName } from '../utils/scenario-name';
-import { scenarioRepository } from '../repositories/scenario.repository';
+import { createId, nowIso } from '../utils/in-memory-store.js';
+import { whatIfSimulateSchema } from '../schemas/whatif.schema.js';
+import { ok, fail } from '../utils/response.js';
+import { projectCash, applyWhatIfParameters, classifySimulationScenario } from '../utils/calculation.js';
+import { DEFAULT_HORIZON_DAYS } from '../config/constants.js';
+import { generateScenarioName } from '../utils/scenario-name.js';
+import { scenarioRepository } from '../repositories/scenario.repository.js';
 export const whatIfService = {
     simulate: async (businessProfileId, input) => {
         const parsed = whatIfSimulateSchema.safeParse(input);

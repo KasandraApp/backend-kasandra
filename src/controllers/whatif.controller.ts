@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { whatIfService } from '../services/whatif.service';
+import { whatIfService } from '../services/whatif.service.js';
 
 export const whatIfController = {
   simulate: async (c: Context) => {

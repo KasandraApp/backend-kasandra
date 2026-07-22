@@ -1,5 +1,5 @@
-import { fail, ok } from '../utils/response';
-import { alertRepository } from '../repositories/alert.repository';
+import { fail, ok } from '../utils/response.js';
+import { alertRepository } from '../repositories/alert.repository.js';
 
 const normalizeAlert = (alert: Record<string, unknown>) => ({
   id: String(alert.id),

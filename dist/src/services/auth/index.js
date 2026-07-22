@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
-import { registerSchema, loginSchema } from '../../schemas/auth';
-import { businessRepository, userRepository } from '../../repositories/user.repository';
-import { signAccessToken } from '../../middleware/auth.middleware';
-import { ok, fail } from '../../utils/response';
+import { registerSchema, loginSchema } from '../../schemas/auth.schema.js';
+import { businessRepository, userRepository } from '../../repositories/user.repository.js';
+import { signAccessToken } from '../../middleware/auth.middleware.js';
+import { ok, fail } from '../../utils/response.js';
 export const authService = {
     register: async (input) => {
         const parsed = registerSchema.safeParse(input);

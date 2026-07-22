@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { inventoryService } from '../services/inventory.service';
+import { inventoryService } from '../services/inventory.service.js';
 
 export const inventoryController = {
   list: async (c: Context) => {

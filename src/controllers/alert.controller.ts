@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { alertService } from '../services/alert.service';
+import { alertService } from '../services/alert.service.js';
 
 export const alertController = {
   list: async (c: Context) => {

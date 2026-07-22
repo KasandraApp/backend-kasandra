@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
-import { businessProfiles, users } from '../db/schema';
-import { createId, nowIso, store } from '../utils/in-memory-store';
+import { businessProfiles, users } from '../db/schema.js';
+import { createId, nowIso, store } from '../utils/in-memory-store.js';
 const fallbackUser = (input) => ({
     id: input.id ?? createId(),
     fullName: input.fullName,

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { inventoryController } from '../controllers/inventory.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { inventoryController } from '../controllers/inventory.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 const inventoryRoute = new Hono();
 inventoryRoute.get('/', authMiddleware, (c) => inventoryController.list(c));
 inventoryRoute.post('/', authMiddleware, (c) => inventoryController.create(c));

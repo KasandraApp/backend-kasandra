@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import { cashService } from '../services/cash.service';
+import { cashService } from '../services/cash.service.js';
 
 export const cashController = {
   list: async (c: Context) => {

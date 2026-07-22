@@ -1,4 +1,4 @@
-import { env } from '../config/env';
+import { env } from '../config/env.js';
 export const oauthService = {
     buildAuthUrl: (redirectUri, clientId, state) => {
         const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');

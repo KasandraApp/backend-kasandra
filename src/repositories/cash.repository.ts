@@ -1,6 +1,6 @@
 import { and, desc, eq, gte, lte } from 'drizzle-orm';
 import { db } from '../db';
-import { cashTransactions } from '../db/schema';
+import { cashTransactions } from '../db/schema.js';
 
 export const cashRepository = {
   findAll: async (
