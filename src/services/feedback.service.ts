@@ -83,7 +83,7 @@ export const feedbackService = {
   submitFeedback: async (payload: FeedbackPayload): Promise<void> => {
     if (!env.googleSheetsClientEmail || !env.googleSheetsPrivateKey || !env.feedbackSpreadsheetId) {
       throw new Error(
-        'Google Sheets feedback is not configured. Set GOOGLE_SHEETS_CLIENT_EMAIL, GOOGLE_SHEETS_PRIVATE_KEY, and FEEDBACK_SPREADSHEET_ID environment variables.',
+        'Google Sheets feedback is not configured. Set GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, and GOOGLE_SHEET_ID environment variables.',
       );
     }
 
