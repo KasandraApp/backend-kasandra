@@ -1,5 +1,5 @@
 import { env } from '../config/env.js';
-import jwt from 'jsonwebtoken';
+import { createSign } from 'node:crypto';
 
 interface FeedbackPayload {
   nama: string;
@@ -8,18 +8,42 @@ interface FeedbackPayload {
 }
 
 /**
- * Generate a Google Service Account JWT to authenticate with Google APIs.
+ * Base64url-encode a Buffer.
+ */
+function base64Url(input: Buffer): string {
+  return input
+    .toString('base64')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+}
+
+/**
+ * Generate a Google Service Account JWT assertion signed with RS256 using native Node crypto.
  */
 function generateJwtAssertion(): string {
   const now = Math.floor(Date.now() / 1000);
-  const payload = {
+
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const claimSet = {
     iss: env.googleSheetsClientEmail,
     scope: 'https://www.googleapis.com/auth/spreadsheets',
     aud: 'https://oauth2.googleapis.com/token',
     exp: now + 3600,
     iat: now,
   };
-  return jwt.sign(payload, env.googleSheetsPrivateKey, { algorithm: 'RS256' });
+
+  const encodedHeader = base64Url(Buffer.from(JSON.stringify(header)));
+  const encodedClaimSet = base64Url(Buffer.from(JSON.stringify(claimSet)));
+  const signatureInput = `${encodedHeader}.${encodedClaimSet}`;
+
+  const sign = createSign('RSA-SHA256');
+  sign.update(signatureInput);
+  sign.end();
+  const signature = sign.sign(env.googleSheetsPrivateKey);
+  const encodedSignature = base64Url(signature);
+
+  return `${signatureInput}.${encodedSignature}`;
 }
 
 /**
