@@ -16,6 +16,7 @@ export const openApiSpec = {
     { name: 'Forecast', description: 'Forecast generation and history' },
     { name: 'What-if', description: 'Scenario simulation and history' },
     { name: 'Alerts', description: 'Alert listing and state changes' },
+    { name: 'Feedback', description: 'Submit user feedback to Google Sheets' },
     { name: 'Health', description: 'Service health checks' },
   ],
   paths: {
@@ -380,6 +381,34 @@ export const openApiSpec = {
         responses: {
           '200': { description: 'Alert updated', content: { 'application/json': { schema: { $ref: '#/components/schemas/ApiResponse' } } } },
           '400': { description: 'Unable to update' },
+        },
+      },
+    },
+    '/api/v1/feedback': {
+      post: {
+        tags: ['Feedback'],
+        summary: 'Submit user feedback',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['nama', 'email', 'masukan'],
+                properties: {
+                  nama: { type: 'string' },
+                  email: { type: 'string', format: 'email' },
+                  masukan: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '201': { description: 'Feedback submitted successfully', content: { 'application/json': { schema: { $ref: '#/components/schemas/ApiResponse' } } } },
+          '400': { description: 'Invalid payload' },
+          '401': { description: 'Unauthorized' },
         },
       },
     },

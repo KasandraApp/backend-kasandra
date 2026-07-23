@@ -10,6 +10,7 @@ import inventoryRoute from './routes/inventory.route.js';
 import forecastRoute from './routes/forecast.route.js';
 import whatIfRoute from './routes/whatif.route.js';
 import alertRoute from './routes/alert.route.js';
+import feedbackRoute from './routes/feedback.route.js';
 import { openApiSpec } from './openapi.js';
 import { env } from './config/env.js';
 
@@ -70,5 +71,6 @@ app.route(`${API_PREFIX}/inventory-items`, inventoryRoute);
 app.route(`${API_PREFIX}/forecast`, forecastRoute);
 app.route(`${API_PREFIX}/what-if`, whatIfRoute);
 app.route(`${API_PREFIX}/alerts`, alertRoute);
+app.route(`${API_PREFIX}/feedback`, feedbackRoute);
 
 export default app;
