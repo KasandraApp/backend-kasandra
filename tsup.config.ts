@@ -15,7 +15,6 @@ export default defineConfig({
     return { js: '.js' }; // pastikan output .js, bukan .mjs (harusnya sudah default karena "type":"module")
   },
   external: [
-    // taruh di sini kalau nanti ada dependency native yang bermasalah,
-    // seperti kasus bcrypt → bcryptjs kemarin di project lain
+    'google-auth-library', // has native sub-dependencies, must remain external
   ],
 });

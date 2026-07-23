@@ -2,6 +2,29 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+interface GoogleServiceAccount {
+  type: string;
+  project_id: string;
+  private_key_id: string;
+  private_key: string;
+  client_email: string;
+  client_id: string;
+  auth_uri: string;
+  token_uri: string;
+  auth_provider_x509_cert_url: string;
+  client_x509_cert_url: string;
+  universe_domain: string;
+}
+
+function parseGoogleServiceAccount(raw: string | undefined): GoogleServiceAccount | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as GoogleServiceAccount;
+  } catch {
+    return null;
+  }
+}
+
 export const env = {
   port: Number(process.env.PORT ?? 3000),
   nodeEnv: process.env.NODE_ENV ?? 'development',
@@ -12,7 +35,7 @@ export const env = {
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
   googleRedirectUri: process.env.GOOGLE_REDIRECT_URI ?? '',
   frontendUrl: process.env.FRONTEND_URL ?? '',
-  googleSheetsClientEmail: process.env.GOOGLE_CLIENT_EMAIL ?? '',
-  googleSheetsPrivateKey: (process.env.GOOGLE_PRIVATE_KEY ?? '').replace(/\\n/g, '\n'),
-  feedbackSpreadsheetId: process.env.GOOGLE_SHEET_ID ?? '',
+  googleServiceAccount: parseGoogleServiceAccount(process.env.GOOGLE_SERVICE_ACCOUNT_JSON),
+  feedbackSpreadsheetId: process.env.FEEDBACK_SPREADSHEET_ID ?? '',
 };
+
